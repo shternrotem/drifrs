@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "227008258082",
+    "project_id": "drifrs-9b5bc",
+    "storage_bucket": "drifrs-9b5bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227008258082:android:66064c3ed64d8e7d79ea7b",
+        "android_client_info": {
+          "package_name": "com.drifrs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3E0QumFefkQRIXbbL9r4xLbqemKFerM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
