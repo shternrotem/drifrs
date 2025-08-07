@@ -15,12 +15,36 @@ const SignUpScreen = () => {
             Alert.alert("Error", "Please fill in all required fields.");
             return;
         }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            Alert.alert(
+                "Weak Password",
+                "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+            );
+            return;
+        }
+
         auth().createUserWithEmailAndPassword(email, password)
             .then(userCredentials => {
-                const uid = userCredentials.user.uid;
+                const user = userCredentials.user;
+                const uid = user.uid;
+
+                // Send verification email
+                user.sendEmailVerification();
+
+                // Create user document in Firestore
                 return firestore().collection('users').doc(uid).set({
                     name, email, work, position, education
                 });
+            })
+            .then(() => {
+                // Log the user out and show a confirmation message
+                auth().signOut();
+                Alert.alert(
+                    "Verification Email Sent",
+                    "Please check your inbox and verify your email address before logging in."
+                );
             })
             .catch(error => Alert.alert("Sign Up Failed", error.message));
     };

@@ -1,24 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ImageBackground } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, ImageBackground, Alert, ScrollView, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { auth, firestore } from '../firebase/config';
 
 const ProfileScreen = () => {
     const [userData, setUserData] = useState(null);
+    const [editableData, setEditableData] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
+    // Fetches user data when the component mounts
     useEffect(() => {
         const user = auth().currentUser;
         if (user) {
             const subscriber = firestore().collection('users').doc(user.uid)
                 .onSnapshot(documentSnapshot => {
-                    setUserData(documentSnapshot.data());
+                    const data = documentSnapshot.data();
+                    setUserData(data);
+                    setEditableData(data);
+                    setIsLoading(false);
                 });
             
-            // Stop listening for updates when no longer required
-            return () => subscriber();
+            return () => subscriber(); // Unsubscribe when component unmounts
         }
     }, []);
 
-    if (!userData) {
+    // Resets the screen state every time it comes into focus
+    useFocusEffect(
+        useCallback(() => {
+            setIsEditMode(false);
+            setEditableData(userData);
+        }, [userData])
+    );
+
+    const handleSave = () => {
+        const user = auth().currentUser;
+        if (user && editableData) {
+            firestore().collection('users').doc(user.uid).update(editableData)
+                .then(() => {
+                    Alert.alert("Success", "Profile updated successfully!");
+                    setIsEditMode(false);
+                })
+                .catch(error => {
+                    Alert.alert("Error", "Could not update profile. " + error.message);
+                });
+        }
+    };
+
+    if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" />
@@ -28,59 +57,139 @@ const ProfileScreen = () => {
 
     return (
         <ImageBackground
-          // To use a local image, change the source to: require('../../assets/your-background.png')
           source={require('../../assets/challenge_bg.png')}
           style={styles.container}
           resizeMode="cover"
         >
-            <View style={styles.overlay}>
+            <ScrollView contentContainerStyle={styles.overlay}>
                 <Text style={styles.title}>Profile</Text>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.profileText}>Name: {userData.name}</Text>
-                    <Text style={styles.profileText}>Email: {userData.email}</Text>
-                    <Text style={styles.profileText}>Place of Work: {userData.work}</Text>
-                    <Text style={styles.profileText}>Position: {userData.position}</Text>
-                    <Text style={styles.profileText}>Education: {userData.education}</Text>
-                </View>
-            </View>
+                
+                {isEditMode ? (
+                    // EDIT MODE VIEW
+                    <View style={styles.infoContainer}>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Name:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <TextInput style={styles.editInput} value={editableData?.name} onChangeText={(text) => setEditableData({...editableData, name: text})} />
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Email:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <TextInput style={styles.editInput} value={editableData?.email} onChangeText={(text) => setEditableData({...editableData, email: text})} keyboardType="email-address" />
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Place of Work:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <TextInput style={styles.editInput} value={editableData?.work} onChangeText={(text) => setEditableData({...editableData, work: text})} />
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Position:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <TextInput style={styles.editInput} value={editableData?.position} onChangeText={(text) => setEditableData({...editableData, position: text})} />
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Education:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <TextInput style={styles.editInput} value={editableData?.education} onChangeText={(text) => setEditableData({...editableData, education: text})} />
+                            </View>
+                        </View>
+                        <View style={styles.buttonRow}>
+                            <Button title="Save" onPress={handleSave} />
+                            <Button title="Cancel" onPress={() => setIsEditMode(false)} color="#ff6347" />
+                        </View>
+                    </View>
+                ) : (
+                    // DISPLAY MODE VIEW
+                    <View style={styles.infoContainer}>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Name:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <Text style={styles.profileValue}>{userData?.name}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Email:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <Text style={styles.profileValue}>{userData?.email}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Place of Work:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <Text style={styles.profileValue}>{userData?.work}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Position:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <Text style={styles.profileValue}>{userData?.position}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.profileFieldContainer}>
+                            <Text style={styles.profileLabel}>Education:</Text>
+                            <View style={styles.profileValueContainer}>
+                                <Text style={styles.profileValue}>{userData?.education}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity style={styles.customButton} onPress={() => setIsEditMode(true)}>
+                            <Text style={styles.customButtonText}>Edit Profile</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </ScrollView>
         </ImageBackground>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    container: { flex: 1 },
+    loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    overlay: { flexGrow: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: 16 },
+    title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20, color: '#FFFFFF', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: {width: -1, height: 1}, textShadowRadius: 10 },
+    infoContainer: { backgroundColor: 'rgba(0, 0, 0, 0.6)', padding: 20, borderRadius: 10 },
+    profileFieldContainer: {
+        marginBottom: 15,
     },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+    profileLabel: {
+        fontSize: 16,
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
-    overlay: {
-        flex: 1,
-        backgroundColor: 'transparent', // Darker overlay for better text contrast
-        padding: 16,
+    profileValueContainer: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        paddingHorizontal: 12,
+        borderRadius: 22,
     },
-    title: {
-        fontSize: 28,
+    profileValue: {
+        fontSize: 16,
+        color: '#000',
+        paddingVertical: 12,
+    },
+    editInput: {
+        fontSize: 16,
+        color: '#000',
+        paddingVertical: 12,
+    },
+    buttonRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 },
+    customButton: {
+        backgroundColor: '#FFFFFF',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 22,
+        alignSelf: 'center',
+        marginTop: 20,
+    },
+    customButtonText: {
+        color: '#000000',
+        fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 30,
-        color: '#FFFFFF',
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10
-    },
-    infoContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        padding: 20,
-        borderRadius: 10,
-    },
-    profileText: {
-        fontSize: 18,
-        marginBottom: 12,
-        color: '#FFFFFF', // White text for readability
-    },
+    }
 });
 
 export default ProfileScreen;

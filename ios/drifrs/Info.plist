@@ -50,6 +50,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Happy School.ttf</string>
+		<string>Retropulse.ttf</string>
 	</array>
 </dict>
 </plist>

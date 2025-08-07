@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground } from 'react-native';
+import {TouchableOpacity, Image, View, Text, TextInput, Button, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { openComposer } from 'react-native-email-link';
 
 const ChallengeScreen = () => {
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
     const [suggestion, setSuggestion] = useState('');
-    const [emailSent, setEmailSent] = useState(false); // State to track if email was sent
+    const [emailSent, setEmailSent] = useState(false);
 
-    // Define the email address as a constant
     const recipientEmail = 'shternrotem@gmail.com';
 
     const handleSend = async () => {
-        // Construct the email body
         const emailBody = `
             Question:
             ${question}
@@ -25,36 +23,32 @@ const ChallengeScreen = () => {
         `;
 
         try {
-            // Open the user's default email app
             await openComposer({
                 to: recipientEmail,
                 subject: 'App Challenge Feedback',
                 body: emailBody,
             });
-            
-            // Clear the fields and show the thank you message
+
             setQuestion('');
             setAnswer('');
             setSuggestion('');
             setEmailSent(true);
 
         } catch (error) {
-            // Handle cases where the user has no email app installed
             Alert.alert("Error", "Could not open email client. Please make sure you have an email app installed.");
             console.error('Failed to open email client:', error);
         }
     };
 
-    // Function to reset the form
     const handleSendAnother = () => {
         setEmailSent(false);
     };
 
     return (
         <ImageBackground
-          source={require('../../assets/challenge_bg.png')}
-          style={styles.container}
-          resizeMode="cover"
+            source={require('../../assets/challenge_bg.png')}
+            style={styles.container}
+            resizeMode="cover"
         >
             <View style={styles.overlay}>
                 {emailSent ? (
@@ -64,13 +58,18 @@ const ChallengeScreen = () => {
                     </View>
                 ) : (
                     <>
-                        <Text style={styles.title}>challenge</Text>
+                        <Image
+                            source={require('../../assets/challenge_title.png')}
+                            style={styles.titleImage}
+                        />
+                        <Text style={styles.subtitle}>Think the answer was incorrect?</Text>
+                        <Text style={styles.underline}>Suggest a solution and we'll get back to you</Text>
                         <TextInput style={styles.inputLarge} placeholder="Question" value={question} onChangeText={setQuestion} multiline placeholderTextColor="#DDD" />
                         <TextInput style={styles.inputLarge} placeholder="Answer" value={answer} onChangeText={setAnswer} multiline placeholderTextColor="#DDD" />
                         <TextInput style={styles.inputLarge} placeholder="Suggested Answer" value={suggestion} onChangeText={setSuggestion} multiline placeholderTextColor="#DDD" />
-                        <View style={styles.buttonContainer}>
-                          <Button title="Send Email" onPress={handleSend} />
-                        </View>
+                        <TouchableOpacity style={styles.customButton} onPress={handleSend}>
+                            <Text style={styles.customButtonText}>Send Email</Text>
+                        </TouchableOpacity>
                     </>
                 )}
             </View>
@@ -86,30 +85,46 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'transparent',
         padding: 16,
-        justifyContent: 'center', // Center content for the thank you message
+        justifyContent: 'flex-start',
     },
-    title: {
-        fontSize: 24,
+    titleImage: {
+        width: '100%',
+        height: 198,
+        marginBottom: -45,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+    },
+    subtitle: {
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
+        fontWeight: 'bold',
         color: '#FFFFFF',
+        marginBottom: 10,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10,
-        fontFamily: 'Happy School'
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
+    },
+    underline: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: '#FFFFFF',
+        marginBottom: 20,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
     },
     inputLarge: {
-        height: 100,
+        height: 132,
         borderColor: '#FFFFFF',
         borderWidth: 1,
-        marginBottom: 12,
+        marginBottom: 10,
         paddingHorizontal: 10,
         paddingTop: 10,
-        borderRadius: 8,
+        borderRadius: 22,
         textAlignVertical: 'top',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        color: '#FFFFFF',
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+        color: '#000000ff',
     },
     thankYouContainer: {
         alignItems: 'center',
@@ -121,13 +136,28 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
+        textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10
     },
     buttonContainer: {
-      width: 200,
-      alignSelf: 'center',
-      marginTop: 10,
+        width: 100,
+        alignSelf: 'center',
+        marginTop: 10,
+        color: '#FFFFFF'
+    },
+    customButton: {
+        backgroundColor: '#FFFFFF', // White background
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 22, // Makes it rounded
+        alignSelf: 'center',
+        marginTop: 10,
+    },
+    customButtonText: {
+        color: '#000000', // Black text
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
     }
 });
 
