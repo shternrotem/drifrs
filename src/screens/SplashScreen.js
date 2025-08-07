@@ -2,19 +2,15 @@ import React, { useEffect } from 'react';
 import { View, Image, ActivityIndicator, StyleSheet } from 'react-native';
 
 const SplashScreen = () => {
-  // This useEffect hook will run once when the component is first rendered.
   useEffect(() => {
     console.log("LOG: Splash Screen has loaded.");
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* 1. Create an 'assets' folder in the root of your project.
-        2. Place your logo image file (e.g., 'logo.png') inside it.
-        3. The 'require' path below should point to that image.
-      */}
+      {}
       <Image
-        source={require('../../assets/logo.png')} // <-- UPDATED LINE
+        source={require('../../assets/logo.png')}
         style={styles.logo}
       />
       <ActivityIndicator size="large" />

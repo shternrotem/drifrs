@@ -9,7 +9,6 @@ const ProfileScreen = () => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Fetches user data when the component mounts
     useEffect(() => {
         const user = auth().currentUser;
         if (user) {
@@ -21,11 +20,10 @@ const ProfileScreen = () => {
                     setIsLoading(false);
                 });
             
-            return () => subscriber(); // Unsubscribe when component unmounts
+            return () => subscriber();
         }
     }, []);
 
-    // Resets the screen state every time it comes into focus
     useFocusEffect(
         useCallback(() => {
             setIsEditMode(false);
@@ -103,7 +101,6 @@ const ProfileScreen = () => {
                         </View>
                     </View>
                 ) : (
-                    // DISPLAY MODE VIEW
                     <View style={styles.infoContainer}>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Name:</Text>

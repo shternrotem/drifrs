@@ -146,15 +146,15 @@ const styles = StyleSheet.create({
         color: '#FFFFFF'
     },
     customButton: {
-        backgroundColor: '#FFFFFF', // White background
+        backgroundColor: '#FFFFFF',
         paddingVertical: 12,
         paddingHorizontal: 30,
-        borderRadius: 22, // Makes it rounded
+        borderRadius: 22,
         alignSelf: 'center',
         marginTop: 10,
     },
     customButtonText: {
-        color: '#000000', // Black text
+        color: '#000000',
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
