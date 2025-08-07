@@ -55,7 +55,7 @@ const ProfileScreen = () => {
 
     return (
         <ImageBackground
-          source={require('../../assets/challenge_bg.png')}
+          source={require('../../assets/bg_01.png')}
           style={styles.container}
           resizeMode="cover"
         >

@@ -22,35 +22,40 @@ const AuthNavigator = () => (
 );
 
 const CustomDrawerContent = (props) => {
-    return (
-      <ImageBackground
-        // Make sure the path to your image is correct
-        source={require('../../assets/menu_bg.png')}
-        style={styles.drawerBackground}
-        resizeMode="cover"
-      >
-        <DrawerContentScrollView {...props}>
-          <DrawerItemList {...props} />
-          <DrawerItem
-            label="Log Out"
-            onPress={() => auth().signOut()}
-            labelStyle={styles.drawerLabel}
-            inactiveTintColor="#fff" // Ensures the icon color is also white
-          />
-        </DrawerContentScrollView>
-      </ImageBackground>
-    );
+  return (
+    <ImageBackground
+      // Make sure the path to your image is correct
+      source={require('../../assets/menu_bg.png')}
+      style={styles.drawerBackground}
+      resizeMode="cover"
+    >
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem
+          label="Log Out"
+          onPress={() => auth().signOut()}
+          labelStyle={styles.drawerLabel}
+          inactiveTintColor="#fff" // Ensures the icon color is also white
+        />
+      </DrawerContentScrollView>
+    </ImageBackground>
+  );
 };
 
 const AppDrawerNavigator = () => (
-  <Drawer.Navigator 
+  <Drawer.Navigator
     initialRouteName="Chat"
     drawerContent={(props) => <CustomDrawerContent {...props} />}
     screenOptions={{
-        drawerLabelStyle: styles.drawerLabel,
-        drawerInactiveTintColor: '#ffffff', // Color for inactive item text and icon
-        drawerActiveTintColor: '#000000', // Color for active item text and icon
-        drawerActiveBackgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent background for the active item
+      headerTransparent: false,
+      headerTintColor: '#000000ff',
+      headerStyle: {
+        height: 100 // <-- Set your desired height here
+    },
+      drawerLabelStyle: styles.drawerLabel,
+      drawerInactiveTintColor: '#ffffff', // Color for inactive item text and icon
+      drawerActiveTintColor: '#000000', // Color for active item text and icon
+      drawerActiveBackgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent background for the active item
     }}
   >
     <Drawer.Screen name="Chat" component={ChatScreen} />
@@ -60,13 +65,13 @@ const AppDrawerNavigator = () => (
 );
 
 const styles = StyleSheet.create({
-    drawerBackground: {
-        flex: 1,
-    },
-    drawerLabel: {
-        color: '#FFFFFF', // Set the text color of all drawer items to white
-        fontWeight: 'bold',
-    },
+  drawerBackground: {
+    flex: 1,
+  },
+  drawerLabel: {
+    color: '#FFFFFF', // Set the text color of all drawer items to white
+    fontWeight: 'bold',
+  },
 });
 
 export { AuthNavigator, AppDrawerNavigator };
