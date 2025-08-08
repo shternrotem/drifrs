@@ -1,8 +1,7 @@
 import React from 'react';
-import { ImageBackground, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import { auth } from '../firebase/config';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons'; // Using Ionicons, a popular icon set
 
 // Import Screens
 import LoginScreen from '../screens/LoginScreen';
@@ -12,7 +11,7 @@ import ChallengeScreen from '../screens/ChallengeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const AuthStack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 const AuthNavigator = () => (
   <AuthStack.Navigator screenOptions={{ headerShown: false }}>
@@ -21,57 +20,38 @@ const AuthNavigator = () => (
   </AuthStack.Navigator>
 );
 
-const CustomDrawerContent = (props) => {
-  return (
-    <ImageBackground
-      // Make sure the path to your image is correct
-      source={require('../../assets/menu_bg.png')}
-      style={styles.drawerBackground}
-      resizeMode="cover"
-    >
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-        <DrawerItem
-          label="Log Out"
-          onPress={() => auth().signOut()}
-          labelStyle={styles.drawerLabel}
-          inactiveTintColor="#fff" // Ensures the icon color is also white
-        />
-      </DrawerContentScrollView>
-    </ImageBackground>
-  );
-};
+// This replaces the old AppDrawerNavigator
+const AppTabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      headerShown: false, // Hides the header at the top
+      tabBarHideOnKeyboard:true,
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
 
-const AppDrawerNavigator = () => (
-  <Drawer.Navigator
-    initialRouteName="Chat"
-    drawerContent={(props) => <CustomDrawerContent {...props} />}
-    screenOptions={{
-      headerTransparent: false,
-      headerTintColor: '#000000ff',
-      headerStyle: {
-        height: 100 // <-- Set your desired height here
-    },
-      drawerLabelStyle: styles.drawerLabel,
-      drawerInactiveTintColor: '#ffffff', // Color for inactive item text and icon
-      drawerActiveTintColor: '#000000', // Color for active item text and icon
-      drawerActiveBackgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent background for the active item
-    }}
+        if (route.name === 'Chat') {
+          iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+        } else if (route.name === 'Challenge') {
+          iconName = focused ? 'mail' : 'mail-outline';
+        } else if (route.name === 'Profile') {
+          iconName = focused ? 'person-circle' : 'person-circle-outline';
+        }
+
+        // You can return any component that you like here!
+        return <Icon name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: 'tomato',
+      tabBarInactiveTintColor: 'gray',
+      tabBarStyle: {
+        backgroundColor: '#fff', // Or any color you prefer
+      },
+    })}
   >
-    <Drawer.Screen name="Chat" component={ChatScreen} />
-    <Drawer.Screen name="Challenge" component={ChallengeScreen} />
-    <Drawer.Screen name="Profile" component={ProfileScreen} />
-  </Drawer.Navigator>
+    <Tab.Screen name="Chat" component={ChatScreen} />
+    <Tab.Screen name="Challenge" component={ChallengeScreen} />
+    <Tab.Screen name="Profile" component={ProfileScreen} />
+  </Tab.Navigator>
 );
 
-const styles = StyleSheet.create({
-  drawerBackground: {
-    flex: 1,
-  },
-  drawerLabel: {
-    color: '#FFFFFF', // Set the text color of all drawer items to white
-    fontWeight: 'bold',
-  },
-});
-
-export { AuthNavigator, AppDrawerNavigator };
+// We now export AppTabNavigator instead of AppDrawerNavigator
+export { AuthNavigator, AppTabNavigator };

@@ -19,7 +19,7 @@ const ProfileScreen = () => {
                     setEditableData(data);
                     setIsLoading(false);
                 });
-            
+
             return () => subscriber();
         }
     }, []);
@@ -55,49 +55,53 @@ const ProfileScreen = () => {
 
     return (
         <ImageBackground
-          source={require('../../assets/bg_01.png')}
-          style={styles.container}
-          resizeMode="cover"
+            source={require('../../assets/bg_01.png')}
+            style={styles.container}
+            resizeMode="cover"
         >
             <ScrollView contentContainerStyle={styles.overlay}>
                 <Text style={styles.title}>Profile</Text>
-                
+
                 {isEditMode ? (
                     // EDIT MODE VIEW
                     <View style={styles.infoContainer}>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Name:</Text>
                             <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.name} onChangeText={(text) => setEditableData({...editableData, name: text})} />
+                                <TextInput style={styles.editInput} value={editableData?.name} onChangeText={(text) => setEditableData({ ...editableData, name: text })} />
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Email:</Text>
                             <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.email} onChangeText={(text) => setEditableData({...editableData, email: text})} keyboardType="email-address" />
+                                <TextInput style={styles.editInput} value={editableData?.email} onChangeText={(text) => setEditableData({ ...editableData, email: text })} keyboardType="email-address" />
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Place of Work:</Text>
                             <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.work} onChangeText={(text) => setEditableData({...editableData, work: text})} />
+                                <TextInput style={styles.editInput} value={editableData?.work} onChangeText={(text) => setEditableData({ ...editableData, work: text })} />
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Position:</Text>
                             <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.position} onChangeText={(text) => setEditableData({...editableData, position: text})} />
+                                <TextInput style={styles.editInput} value={editableData?.position} onChangeText={(text) => setEditableData({ ...editableData, position: text })} />
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Education:</Text>
                             <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.education} onChangeText={(text) => setEditableData({...editableData, education: text})} />
+                                <TextInput style={styles.editInput} value={editableData?.education} onChangeText={(text) => setEditableData({ ...editableData, education: text })} />
                             </View>
                         </View>
                         <View style={styles.buttonRow}>
-                            <Button title="Save" onPress={handleSave} />
-                            <Button title="Cancel" onPress={() => setIsEditMode(false)} color="#ff6347" />
+                            <TouchableOpacity style={styles.customButton} onPress={handleSave}>
+                                <Text style={styles.customButtonText}>Save</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.logOutButton} onPress={() => setIsEditMode(false)}>
+                                <Text style={styles.logOutButtonText}>Cancel</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 ) : (
@@ -135,6 +139,9 @@ const ProfileScreen = () => {
                         <TouchableOpacity style={styles.customButton} onPress={() => setIsEditMode(true)}>
                             <Text style={styles.customButtonText}>Edit Profile</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.logOutButton} onPress={() => auth().signOut()}>
+                            <Text style={styles.logOutButtonText}>Log Out</Text>
+                        </TouchableOpacity>
                     </View>
                 )}
             </ScrollView>
@@ -146,7 +153,7 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     overlay: { flexGrow: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: 16 },
-    title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20, color: '#FFFFFF', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: {width: -1, height: 1}, textShadowRadius: 10 },
+    title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20, color: '#FFFFFF', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 },
     infoContainer: { backgroundColor: 'rgba(0, 0, 0, 0.6)', padding: 20, borderRadius: 10 },
     profileFieldContainer: {
         marginBottom: 15,
@@ -181,8 +188,22 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 20,
     },
+    logOutButton: {
+        backgroundColor: '#ff0000ff',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 22,
+        alignSelf: 'center',
+        marginTop: 20,
+    },
     customButtonText: {
         color: '#000000',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    logOutButtonText: {
+        color: '#ffffffff',
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',

@@ -41,8 +41,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'black', // Prevents a flash of color before the video loads
   },
   video: {
-    width: '100%', // Makes the video fill the circular container
-    height: '100%',
+    width: '150%', // Makes the video fill the circular container
+    height: '150%',
+    left: '-25%',
+    top: '-25%',
   },
 });
 

@@ -7,7 +7,7 @@ import 'react-native-gesture-handler';
 import RNBootSplash from 'react-native-bootsplash';
 
 import SplashScreen from './src/screens/SplashScreen';
-import { AuthNavigator, AppDrawerNavigator } from './src/navigation/AppNavigator';
+import { AuthNavigator, AppTabNavigator } from './src/navigation/AppNavigator';
 
 const RootStack = createNativeStackNavigator();
 
@@ -45,7 +45,7 @@ const App = () => {
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <RootStack.Screen name="AppDrawer" component={AppDrawerNavigator} />
+          <RootStack.Screen name="AppTabs" component={AppTabNavigator} />
         ) : (
           <RootStack.Screen name="Auth" component={AuthNavigator} />
         )}
