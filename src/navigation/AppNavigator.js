@@ -9,6 +9,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import AboutScreen from '../screens/AboutScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,8 +25,8 @@ const AuthNavigator = () => (
 const AppTabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      headerShown: false, // Hides the header at the top
-      tabBarHideOnKeyboard:true,
+      headerShown: false,
+      tabBarHideOnKeyboard: true,
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
@@ -35,23 +36,26 @@ const AppTabNavigator = () => (
           iconName = focused ? 'mail' : 'mail-outline';
         } else if (route.name === 'Profile') {
           iconName = focused ? 'person-circle' : 'person-circle-outline';
+        } else if (route.name === 'About') { // <-- Add this else if block
+          iconName = focused ? 'information-circle' : 'information-circle-outline';
         }
 
-        // You can return any component that you like here!
         return <Icon name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: 'tomato',
       tabBarInactiveTintColor: 'gray',
       tabBarStyle: {
-        backgroundColor: '#fff', // Or any color you prefer
+        backgroundColor: '#fff',
       },
     })}
   >
     <Tab.Screen name="Chat" component={ChatScreen} />
     <Tab.Screen name="Challenge" component={ChallengeScreen} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
+    <Tab.Screen name="About" component={AboutScreen} /> 
   </Tab.Navigator>
 );
+
 
 // We now export AppTabNavigator instead of AppDrawerNavigator
 export { AuthNavigator, AppTabNavigator };
