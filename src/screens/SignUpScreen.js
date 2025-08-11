@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { SafeAreaView, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { Text, TouchableOpacity, SafeAreaView, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { auth, firestore } from '../firebase/config';
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [work, setWork] = useState('');
@@ -58,6 +58,9 @@ const SignUpScreen = () => {
             <TextInput style={styles.input} placeholder="Education Institute" value={education} onChangeText={setEducation} />
             <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
             <Button title="Sign Up" onPress={handleSignUp} />
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.linkText}>Have an account? Log In</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 };
@@ -65,6 +68,7 @@ const SignUpScreen = () => {
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: 16 },
     input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 12, paddingHorizontal: 8, borderRadius: 5 },
+    linkText: { color: '#007bff', marginTop: 15, textAlign: 'center' },
 });
 
 export default SignUpScreen;
