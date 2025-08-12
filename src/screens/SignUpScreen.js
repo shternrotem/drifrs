@@ -5,8 +5,8 @@ import { auth, firestore } from '../firebase/config';
 const SignUpScreen = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState(''); // <-- Add new state for phone number
     const [work, setWork] = useState('');
-    const [position, setPosition] = useState('');
     const [education, setEducation] = useState('');
     const [password, setPassword] = useState('');
 
@@ -33,9 +33,13 @@ const SignUpScreen = ({ navigation }) => {
                 // Send verification email
                 user.sendEmailVerification();
 
-                // Create user document in Firestore
+                // Create user document in Firestore, including the phone number
                 return firestore().collection('users').doc(uid).set({
-                    name, email, work, position, education
+                    name,
+                    email,
+                    phone, // <-- Add phone to the user data
+                    work,
+                    education
                 });
             })
             .then(() => {
@@ -49,12 +53,25 @@ const SignUpScreen = ({ navigation }) => {
             .catch(error => Alert.alert("Sign Up Failed", error.message));
     };
 
+    // New handler to allow only numeric input for the phone number
+    const handlePhoneChange = (text) => {
+        const numericText = text.replace(/[^0-9]/g, '');
+        setPhone(numericText);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <TextInput style={styles.input} placeholder="Name" value={name} onChangeText={setName} />
             <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+            {/* Updated TextInput for phone number */}
+            <TextInput
+                style={styles.input}
+                placeholder="Phone Number"
+                value={phone}
+                onChangeText={handlePhoneChange} // Use the new handler
+                keyboardType="phone-pad"
+            />
             <TextInput style={styles.input} placeholder="Place of Work" value={work} onChangeText={setWork} />
-            <TextInput style={styles.input} placeholder="Position" value={position} onChangeText={setPosition} />
             <TextInput style={styles.input} placeholder="Education Institute" value={education} onChangeText={setEducation} />
             <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
             <Button title="Sign Up" onPress={handleSignUp} />

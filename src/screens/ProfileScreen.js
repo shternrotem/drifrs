@@ -86,12 +86,6 @@ const ProfileScreen = () => {
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
-                            <Text style={styles.profileLabel}>Position:</Text>
-                            <View style={styles.profileValueContainer}>
-                                <TextInput style={styles.editInput} value={editableData?.position} onChangeText={(text) => setEditableData({ ...editableData, position: text })} />
-                            </View>
-                        </View>
-                        <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Education:</Text>
                             <View style={styles.profileValueContainer}>
                                 <TextInput style={styles.editInput} value={editableData?.education} onChangeText={(text) => setEditableData({ ...editableData, education: text })} />
@@ -127,12 +121,6 @@ const ProfileScreen = () => {
                             </View>
                         </View>
                         <View style={styles.profileFieldContainer}>
-                            <Text style={styles.profileLabel}>Position:</Text>
-                            <View style={styles.profileValueContainer}>
-                                <Text style={styles.profileValue}>{userData?.position}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.profileFieldContainer}>
                             <Text style={styles.profileLabel}>Education:</Text>
                             <View style={styles.profileValueContainer}>
                                 <Text style={styles.profileValue}>{userData?.education}</Text>
@@ -156,7 +144,7 @@ const styles = StyleSheet.create({
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     overlay: { flexGrow: 1, backgroundColor: 'rgba(0, 0, 0, 0)', padding: 16 },
     title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20, color: '#FFFFFF', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 },
-    infoContainer: { backgroundColor: 'rgba(0, 0, 0, 0)', padding: 20, borderRadius: 10 },
+    infoContainer: { backgroundColor: 'rgba(0, 0, 0, 0)', padding: -20, borderRadius: 10 },
     profileFieldContainer: {
         marginBottom: 15,
     },
@@ -214,8 +202,8 @@ const styles = StyleSheet.create({
         width: '100%', // Example width, adjust as needed
         height: 200,   // Example height, adjust as needed
         resizeMode: 'contain',
-        alignSelf: 'center',
-        marginVertical: 0,
+        alignSelf: 'auto',
+        marginVertical: 50,
     },
 });
 
