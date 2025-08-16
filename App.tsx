@@ -19,28 +19,29 @@ const App = () => {
     // This listener will set the user's auth state in the background.
     const subscriber = auth().onAuthStateChanged(userState => {
       setUser(userState);
+
+      // 1. The logic to transition is now here, happening after the first auth check.
+      // We no longer need to wait for a video.
+      if (!isAppReady) {
+        RNBootSplash.hide({ fade: true });
+        setIsAppReady(true);
+      }
     });
+
     return subscriber;
+    // 2. The empty dependency array ensures this runs only once on mount.
   }, []);
 
-  // This function will be called by the SplashScreen when the video is ready.
-  const handleVideoReady = () => {
-    // Hide the native splash screen, revealing the video splash screen.
-    RNBootSplash.hide({ fade: true });
+  // 3. The handleVideoReady function and its setTimeout have been removed.
 
-    // Set a timer to transition from the video splash to the main app.
-    setTimeout(() => {
-      setIsAppReady(true);
-    }, 2500); // Let the video play for 2.5 seconds after it loads.
-  };
-
-  // The native splash screen is visible initially. Then this component
-  // shows until isAppReady is true.
+  // The native splash screen is visible initially. Then this JS splash
+  // shows briefly until isAppReady is true.
   if (!isAppReady) {
-    return <SplashScreen onVideoReady={handleVideoReady} />;
+    // 4. SplashScreen is now called without the onVideoReady prop.
+    return <SplashScreen />;
   }
 
-  // After the video has played, show the main app.
+  // After the app is ready, show the main navigation.
   return (
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
